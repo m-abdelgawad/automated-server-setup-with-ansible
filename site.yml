@@ -1,0 +1,68 @@
+---
+- name: Automated Initial Server Setup with Ansible (RHEL & Ubuntu)
+  hosts: [servers]
+  gather_facts: true
+  become: true
+  become_user: root
+  vars:
+    ansible_user: root
+    repositories:
+      - url: git@github.com:m-abdelgawad/automagic-docker-stack.git
+        dest: "/home/{{ sudo_username }}/automagic-stack"
+
+      - url: git@github.com:m-abdelgawad/jenkins-server
+        dest: "/home/{{ sudo_username }}/jenkins-server"
+
+      - url: git@github.com:m-abdelgawad/automagic-backups
+        dest: "/home/{{ sudo_username }}/backups"
+
+      - url: git@github.com:m-abdelgawad/secrets
+        dest: "/home/{{ sudo_username }}/secrets"
+
+      - url: git@github.com:m-abdelgawad/docker-scripts
+        dest: "/home/{{ sudo_username }}/scripts"
+
+      - url: git@github.com:m-abdelgawad/nginx-server
+        dest: "/home/{{ sudo_username }}/nginx-server"
+
+      - url: git@github.com:m-abdelgawad/todowoo-django-docker-stack
+        dest: "/home/{{ sudo_username }}/todowoo-stack"
+
+      - url: git@github.com:m-abdelgawad/automated-initial-server-setup-with-ansible
+        dest: "/home/{{ sudo_username }}/initial-server-setup"
+
+  vars_files:
+    - vars/global.yml
+    - vars/secrets.yml
+
+  pre_tasks:
+
+    - name: Print system distribution and version
+      include_tasks: tasks/system_info.yml
+
+    - name: Install prerequisite packages
+      import_tasks: tasks/packages.yml
+
+    - name: Perform system restart if required
+      import_tasks: tasks/restart_system.yml
+
+    - name: Create sudo user
+      include_tasks: tasks/sudo_user.yml
+
+  roles:
+    - roles/firewall-role
+
+  tasks:
+
+    - name: Transfer SSH key pair
+      import_tasks: tasks/transfer_ssh_pair.yml
+
+    - name: Configure passwordless root access
+      import_tasks: tasks/passwordless_root_access.yml
+
+    - name: Configure Git
+      import_tasks: tasks/git.yml
+
+    - name: Pull Starter Repos
+      import_tasks: tasks/pull_repos.yml
+...

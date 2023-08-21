@@ -1,0 +1,41 @@
+---
+- name: Make sure that the wheel group exists
+  group:
+    name: wheel
+    state: present
+
+- name: Allow the wheel group to have passwordless sudo
+  lineinfile:
+    path: /etc/sudoers
+    state: present
+    regexp: '^%wheel'
+    line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+    validate: '/usr/sbin/visudo -cf %s'
+
+- name: Create a new user
+  user:
+    name: "{{ sudo_username }}"
+    password: "{{ sudo_password | password_hash('sha512') }}"
+    state: present
+    groups: wheel, docker
+    append: true
+    create_home: true
+    shell: /bin/bash
+    password_lock: false
+
+- name: Enable password login
+  become: yes
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^PasswordAuthentication'
+    line: 'PasswordAuthentication yes'
+    backup: yes
+  register: password_login_changed
+
+- name: Restart SSH
+  when: password_login_changed.changed
+  become: yes
+  systemd:
+    name: sshd
+    state: restarted
+...

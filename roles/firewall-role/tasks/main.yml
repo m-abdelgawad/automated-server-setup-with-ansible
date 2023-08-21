@@ -1,0 +1,102 @@
+---
+# tasks file for firewall-role
+- name: Enable UFW firewall
+  when: ansible_distribution in apt_distributions
+  ufw:
+    state: enabled
+  notify:
+    - Reload UFW
+
+- name: Allow SSH (Port 22) in UFW
+  when: ansible_distribution in apt_distributions
+  ufw:
+    port: '22'
+    rule: allow
+  notify:
+    - Reload UFW
+
+- name: Allow HTTP (Port 80) in UFW
+  when: ansible_distribution in apt_distributions
+  ufw:
+    port: '80'
+    rule: allow
+  notify:
+    - Reload UFW
+
+- name: Allow HTTPS (Port 443) in UFW
+  when: ansible_distribution in apt_distributions
+  ufw:
+    port: '443'
+    rule: allow
+  notify:
+    - Reload UFW
+
+- name: Disable IPv6 in UFW in UFW
+  when: ansible_distribution in apt_distributions
+  lineinfile:
+    path: /etc/default/ufw
+    line: 'IPV6=no'
+    regexp: '^IPV6='
+    state: present
+  notify:
+    - Reload UFW
+
+- name: UFW - Deny all other incoming traffic by default
+  when: ansible_distribution in apt_distributions
+  ufw:
+    policy: deny
+    direction: incoming
+  notify:
+    - Reload UFW
+
+- name: Start firewalld service
+  when: ansible_distribution in yum_distributions
+  service:
+    name: firewalld
+    state: started
+    enabled: true
+
+- name: Enable firewalld
+  when: ansible_distribution in yum_distributions
+  firewalld:
+    state: enabled
+
+- name: Allow SSH (Port 22) in Firewalld
+  when: ansible_distribution in yum_distributions
+  firewalld:
+    service: ssh
+    permanent: yes  # Apply the rule permanently
+    immediate: yes  # Apply the rule immediately
+    state: enabled
+  notify:
+    - Reload firewalld
+
+- name: Allow HTTP (Port 80) in Firewalld
+  when: ansible_distribution in yum_distributions
+  firewalld:
+    port: 80/tcp
+    permanent: yes  # Apply the rule permanently
+    immediate: yes  # Apply the rule immediately
+    state: disabled
+  notify:
+    - Reload firewalld
+
+- name: Allow HTTPS (Port 443) in Firewalld
+  when: ansible_distribution in yum_distributions
+  firewalld:
+    port: 443/tcp
+    permanent: yes  # Apply the rule permanently
+    immediate: yes  # Apply the rule immediately
+    state: enabled
+  notify:
+    - Reload firewalld
+
+- name: Disable IPv6 in firewalld in Firewalld
+  when: ansible_distribution in yum_distributions
+  lineinfile:
+    path: /etc/sysconfig/network
+    line: 'NETWORKING_IPV6=no'
+    regexp: '^NETWORKING_IPV6='
+    state: present
+  notify:
+    - Reload firewalld

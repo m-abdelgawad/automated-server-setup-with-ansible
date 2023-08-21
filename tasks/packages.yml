@@ -1,0 +1,97 @@
+---
+- name: Install prerequisites packages for (apt)
+  package:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - apt-utils
+    - python3-venv
+    - python3-dev
+    - libpq-dev
+    - git
+    - docker.io
+    - ansible
+    - curl
+    - nano
+    - whois
+    - tree
+    - p7zip-full
+    - postgresql-client
+    - unzip
+  when:
+    - ansible_distribution in apt_distributions
+
+- name: Add Docker repository for yum-based distributions
+  when: ansible_distribution in yum_distributions
+  command: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+- name: Install prerequisites packages (yum)
+  yum:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - yum-utils
+    - git
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+    - docker-buildx-plugin
+    - docker-compose-plugin
+    - nano
+    - curl
+    - ansible
+    - expect
+    - whois
+    - firewalld
+    - tree
+    - p7zip
+    - postgresql
+    - unzip
+  when: ansible_distribution in yum_distributions
+
+- name: Create symbolic link from 7za to 7z
+  when: ansible_distribution in yum_distributions
+  become: yes
+  file:
+    src: /usr/bin/7za
+    dest: /usr/bin/7z
+    state: link
+
+- name: Get Kubernetes stable release version
+  shell: "curl -L -s https://dl.k8s.io/release/stable.txt"
+  register: k8s_version
+
+- name: Download kubectl
+  get_url:
+    url: https://dl.k8s.io/release/{{ k8s_version.stdout }}/bin/linux/amd64/kubectl
+    dest: /usr/local/bin/kubectl
+    mode: '0755'  # Set executable permission
+
+- name: Set executable permission for kubectl
+  file:
+    path: /usr/local/bin/kubectl
+    mode: '+x'
+
+- name: Download Docker Compose binary
+  raw: curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  args:
+    creates: /usr/local/bin/docker-compose
+
+- name: Move Docker Compose binary to /usr/local/bin
+  command: "sudo mv docker-compose /usr/local/bin"
+  args:
+    creates: /usr/local/bin/docker-compose
+  register: move_output
+  changed_when: move_output.rc == 0
+
+- name: Make Docker Compose executable for all users
+  file:
+    path: /usr/local/bin/docker-compose
+    mode: 'a+x'
+
+- name: Start Docker service
+  service:
+    name: docker
+    enabled: yes
+    state: started
+...

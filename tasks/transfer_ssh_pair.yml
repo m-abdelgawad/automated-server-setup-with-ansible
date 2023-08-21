@@ -1,0 +1,30 @@
+---
+- name: Create SSH directory
+  file:
+    path: "/home/{{ sudo_username }}/.ssh"
+    state: directory
+    mode: '0700'
+
+- name: Copy private key
+  copy:
+    content: "{{ ssh_private_key }}"
+    dest: "/home/{{ sudo_username }}/.ssh/id_rsa"
+    mode: '0600'
+    owner: "{{ sudo_username }}"
+    group: "{{ sudo_username }}"
+
+- name: Copy public key
+  copy:
+    content: "{{ ssh_public_key }}"
+    dest: "/home/{{ sudo_username }}/.ssh/id_rsa.pub"
+    mode: '0644'
+    owner: "{{ sudo_username }}"
+    group: "{{ sudo_username }}"
+
+- name: Set correct ownership
+  file:
+    path: "/home/{{ sudo_username }}/.ssh"
+    owner: "{{ sudo_username }}"
+    group: "{{ sudo_username }}"
+    recurse: yes
+...

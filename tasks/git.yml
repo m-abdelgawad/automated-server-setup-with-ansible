@@ -1,0 +1,21 @@
+---
+- name: Set user.email Git configuration for root
+  become: true
+  become_user: root
+  command: git config --global user.email "{{ git_author_email }}"
+
+- name: Set user.name Git configuration for root
+  become: true
+  become_user: root
+  command: git config --global user.name "{{ git_author_name }}"
+
+- name: Set user.email Git configuration for {{ sudo_username }}
+  become: true
+  become_user: "{{ sudo_username }}"
+  command: git config --global user.email "{{ git_author_email }}"
+
+- name: Set user.name Git configuration for {{ sudo_username }}
+  become: true
+  become_user: "{{ sudo_username }}"
+  command: git config --global user.name "{{ git_author_name }}"
+...

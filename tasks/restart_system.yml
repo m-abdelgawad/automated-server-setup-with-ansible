@@ -1,0 +1,14 @@
+---
+- name: Check if the system needs to restart
+  stat:
+    path: /var/run/reboot-required
+  register: restart_check
+  changed_when: false
+
+- name: Perform system restart if required
+  reboot:
+    msg: "Reboot initiated by Ansible"
+    reboot_timeout: 300
+  when: restart_check.stat.exists
+  async: 0
+...

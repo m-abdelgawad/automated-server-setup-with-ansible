@@ -1,0 +1,26 @@
+---
+- name: Pull GitHub Repos
+  git:
+    repo: "{{ item.url }}"
+    dest: "{{ item.dest }}"
+    version: main
+    accept_hostkey: yes
+    key_file: "/home/{{ sudo_username }}/.ssh/id_rsa"
+    force: yes
+  loop: "{{ repositories }}"
+  register: pulled_repo
+
+- name: Set safe.directory exception for the pulled repos
+  command: git config --global --add safe.directory "{{ item.dest }}"
+  loop: "{{ repositories }}"
+
+- name: Change owner and group owner of the pulled repos to the Sudo user
+  file:
+    path: "{{ item.dest }}"
+    state: directory
+    recurse: yes
+    owner: "{{ sudo_username }}"
+    group: "{{ sudo_username }}"
+    follow: yes
+  loop: "{{ repositories }}"
+...

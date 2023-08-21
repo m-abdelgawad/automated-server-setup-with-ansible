@@ -1,0 +1,10 @@
+---
+# handlers file for firewall-role
+- name: Reload UFW
+  ufw:
+    state: reloaded
+
+- name: Reload firewalld
+  systemd:
+    name: firewalld
+    state: restarted

@@ -1,0 +1,9 @@
+---
+# vars file for firewall-role
+apt_distributions:
+  - Ubuntu
+  - Debian
+
+yum_distributions:
+  - CentOS
+  - RedHat

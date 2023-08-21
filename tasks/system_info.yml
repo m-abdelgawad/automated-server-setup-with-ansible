@@ -1,0 +1,5 @@
+---
+- name: Print system distribution and version
+  debug:
+    msg: "Distribution: {{ ansible_distribution }}, Version: {{ ansible_distribution_version }}"
+...

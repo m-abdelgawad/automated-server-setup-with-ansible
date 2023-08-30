@@ -43,6 +43,9 @@
     - name: Install prerequisite packages
       import_tasks: tasks/packages.yml
 
+    - name: Upgrade all packages
+      import_tasks: tasks/upgrade_packages.yml
+
     - name: Perform system restart if required
       import_tasks: tasks/restart_system.yml
 

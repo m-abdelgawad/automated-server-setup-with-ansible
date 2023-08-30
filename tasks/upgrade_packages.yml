@@ -1,0 +1,7 @@
+---
+- name: Update System Packages for apt-based distributions
+  when: ansible_distribution in apt_distributions
+  apt:
+    upgrade: dist
+    update_cache: yes
+...

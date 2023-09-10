@@ -6,31 +6,6 @@
   become_user: root
   vars:
     ansible_user: root
-    repositories:
-      - url: git@github.com:m-abdelgawad/automagic-docker-stack.git
-        dest: "/home/{{ sudo_username }}/automagic-stack"
-
-      - url: git@github.com:m-abdelgawad/jenkins-server
-        dest: "/home/{{ sudo_username }}/jenkins-server"
-
-      - url: git@github.com:m-abdelgawad/automagic-backups
-        dest: "/home/{{ sudo_username }}/backups"
-
-      - url: git@github.com:m-abdelgawad/secrets
-        dest: "/home/{{ sudo_username }}/secrets"
-
-      - url: git@github.com:m-abdelgawad/docker-scripts
-        dest: "/home/{{ sudo_username }}/scripts"
-
-      - url: git@github.com:m-abdelgawad/nginx-server
-        dest: "/home/{{ sudo_username }}/nginx-server"
-
-      - url: git@github.com:m-abdelgawad/todowoo-django-docker-stack
-        dest: "/home/{{ sudo_username }}/todowoo-stack"
-
-      - url: git@github.com:m-abdelgawad/automated-initial-server-setup-with-ansible
-        dest: "/home/{{ sudo_username }}/initial-server-setup"
-
   vars_files:
     - vars/global.yml
     - vars/secrets.yml

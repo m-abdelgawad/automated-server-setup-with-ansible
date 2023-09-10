@@ -6,7 +6,7 @@
     version: main
     accept_hostkey: yes
     key_file: "/home/{{ sudo_username }}/.ssh/id_rsa"
-    force: yes
+    force: no
   loop: "{{ repositories }}"
   register: pulled_repo
 

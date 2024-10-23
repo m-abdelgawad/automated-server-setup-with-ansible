@@ -72,14 +72,10 @@ This project was developed using:
 
 ---
 
+<!-- CONTACT -->
 ## Contact
 
-Mohamed AbdelGawad Ibrahim  
-[@m-abdelgawad](https://www.linkedin.com/in/m-abdelgawad/)  
-<a href="tel:+201069052620">+201069052620</a>  
-[muhammadabdelgawwad@gmail.com](mailto:muhammadabdelgawwad@gmail.com)
-
-GitHub Profile Link: [https://github.com/m-abdelgawad](https://github.com/m-abdelgawad)
+Mohamed AbdelGawad Ibrahim - [@m-abdelgawad](https://www.linkedin.com/in/m-abdelgawad/) - <a href="tel:+201069052620">+201069052620</a>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

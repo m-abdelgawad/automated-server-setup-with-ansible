@@ -1,3 +1,2 @@
 [servers]
-Ubuntu ansible_host=137.184.67.202
-RHEL ansible_host=192.241.132.123
+Localhost ansible_host=localhost
